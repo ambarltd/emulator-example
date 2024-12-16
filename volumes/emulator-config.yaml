@@ -1,0 +1,28 @@
+# Where data is fetched from.
+data_sources:
+  - id: events_db
+    description: User events
+    type: file
+    path: /opt/emulator/file.database
+    incrementingField: id
+    partitioningField: user_id
+
+# Where we push data to.
+data_destinations:
+  - id: accounts_projection
+    description: Calculate account balances
+    type: http-push
+    endpoint: http://projections:8080/calculate-balance
+    username: test
+    password: pass123
+    sources:
+      - events_db
+
+  - id: operations_projection
+    description: Calculate total number of operations
+    type: http-push
+    endpoint: http://projections:8080/calculate-operations
+    username: test
+    password: pass123
+    sources:
+      - events_db
