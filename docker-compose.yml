@@ -3,24 +3,25 @@ services:
   # Projects database events to the 'projections' service.
   ambar-emulator:
     image: ambarltd/emulator:v1.8
-    command: "run --data-path /opt/emulator/data --config /opt/emulator/config.yaml"
+    command: "run --data-path /app/data --config /app/config.yaml"
     volumes:
-      - ./volumes/emulator-config.yaml:/opt/emulator/config.yaml
-      - ./volumes/emulator-data:/opt/emulator/data
-      - ./volumes/file.database:/opt/emulator/file.database
+      - ./volumes/emulator-config.yaml:/app/config.yaml
+      - ./volumes/file.database:/app/file.database
 
   # Write events into the database.
   writer:
     image: node:23
-    command: node /app/writer.js
+    init: true
+    command: node /app/writer.js --database /app/file.database
     volumes:
       - ./writer.js:/app/writer.js
+      - ./volumes/file.database:/app/file.database
 
   # Build read models from events.
   projections:
     image: node:23
-    command: node /app/projections.js
     init: true
+    command: node /app/projections.js
     volumes:
       - ./projections.js:/app/projections.js
     ports:

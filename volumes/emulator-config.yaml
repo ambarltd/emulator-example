@@ -3,7 +3,7 @@ data_sources:
   - id: events_db
     description: User events
     type: file
-    path: /opt/emulator/file.database
+    path: /app/file.database
     incrementingField: id
     partitioningField: user_id
 
