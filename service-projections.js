@@ -89,11 +89,6 @@ const user_info = {
 }
 
 function route_root(_, res) {
-  const rows = Object.keys(user_info).map(user_id => ({
-    name: user_info[user_id].name,
-    balance: "$" + (balances[user_id] || 0) + ".00",
-    operations: operations[user_id] || 0,
-  }));
   res.writeHead(200, "Content-Type","text/plain");
   res.write("<h1>Dashboard</h1>");
   res.write(`<table style="text-align: left; border: 1px solid black">`);
@@ -102,11 +97,13 @@ function route_root(_, res) {
     <th>Balance</th>
     <th>Operations</th>
   </tr>`);
-  rows.forEach(row => res.write(`<tr>
-    <td>${row.name}</td>
-    <td>${row.balance}</td>
-    <td>${row.operations}</td>
-    </tr>`));
+
+  Object.keys(user_info)
+    .map(user_id => res.write(`<tr>
+      <td>${user_info[user_id].name}</td>
+      <td>$${balances[user_id] || 0}.00</td>
+      <td>${operations[user_id] || 0}</td>
+      </tr>`));
   res.end();
 }
 

@@ -1,6 +1,6 @@
 /*
  *
- *  A script to simulate the real-world by repeatedly
+ *  A script to simulate the real world by repeatedly
  *  emitting account transaction events for a set of user ids.
  *
  */
