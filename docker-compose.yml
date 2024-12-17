@@ -5,17 +5,17 @@ services:
     image: ambarltd/emulator:v1.8
     command: "run --data-path /app/data --config /app/config.yaml"
     volumes:
-      - ./volumes/emulator-config.yaml:/app/config.yaml
-      - ./volumes/file.database:/app/file.database
+      - ./emulator-config.yaml:/app/config.yaml
+      - ./events.database:/app/events.database
 
   # Write events into the database.
   writer:
     image: node:23
     init: true
-    command: node /app/writer.js --database /app/file.database
+    command: node /app/writer.js --database /app/events.database
     volumes:
       - ./writer.js:/app/writer.js
-      - ./volumes/file.database:/app/file.database
+      - ./events.database:/app/events.database
 
   # Build read models from events.
   projections:

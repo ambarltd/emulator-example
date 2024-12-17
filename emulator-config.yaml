@@ -3,7 +3,7 @@ data_sources:
   - id: events_db
     description: User events
     type: file
-    path: /app/file.database
+    path: /app/events.database
     incrementingField: id
     partitioningField: user_id
 
