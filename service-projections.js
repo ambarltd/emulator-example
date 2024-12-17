@@ -1,3 +1,25 @@
+/*
+ *
+ *  A server that implements projections and displays a view model.
+ *
+ *  View the dashboard at http://localhost:8080
+ *
+ *  The server implements two projections:
+ *
+ *    * Account balance per user
+ *    * Total operations per user
+ *
+ *  Each projection builds a view of the data and is implemented
+ *  in an endpoint which processes events and updates a JS object
+ *  with relevant data.
+ *
+ *  The object acts as an in-memory database which holds the
+ *  stateful data backing the view.
+ *
+ *  The dashboard shows a table with data from both projections.
+ *
+ */
+
 const http = require("http");
 
 function main() {
@@ -56,21 +78,19 @@ function route_calculateOperations(req, res) {
 }
 
 const user_info = {
-  1: { name: "John Smith", age: 25 },
-  2: { name: "Jane Doe", age: 36 },
-  3: { name: "Michael Johnson", age: 59 },
-  4: { name: "Emily Davis", age: 29 },
-  5: { name: "Robert Brown", age: 70 },
-  6: { name: "Sarah Wilson", age: 62 },
-  7: { name: "David Miller", age: 44 },
-  8: { name: "Jessica Taylor", age: 40 },
-  9: { name: "William Anderson", age: 80 },
+  2: { name: "Jane Doe" },
+  3: { name: "Michael Johnson" },
+  4: { name: "Emily Davis" },
+  5: { name: "Robert Brown" },
+  6: { name: "Sarah Wilson" },
+  7: { name: "David Miller" },
+  8: { name: "Jessica Taylor" },
+  9: { name: "William Anderson" },
 }
 
 function route_root(_, res) {
   const rows = Object.keys(user_info).map(user_id => ({
     name: user_info[user_id].name,
-    age: user_info[user_id].age,
     balance: "$" + (balances[user_id] || 0) + ".00",
     operations: operations[user_id] || 0,
   }));
@@ -79,13 +99,11 @@ function route_root(_, res) {
   res.write(`<table style="text-align: left; border: 1px solid black">`);
   res.write(`<tr>
     <th>Name</th>
-    <th>Age</th>
     <th>Balance</th>
     <th>Operations</th>
   </tr>`);
   rows.forEach(row => res.write(`<tr>
     <td>${row.name}</td>
-    <td>${row.age}</td>
     <td>${row.balance}</td>
     <td>${row.operations}</td>
     </tr>`));
